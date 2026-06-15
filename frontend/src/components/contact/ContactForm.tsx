@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import api from '@/lib/api'; // 🔴 ඔයාගේ Axios instance එක
 
 export const ContactForm = () => {
   const { toast } = useToast();
@@ -14,19 +15,21 @@ export const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    
     try {
-      const res = await fetch('http://localhost:5000/api/contact/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      if (res.ok) {
+      // 🔴 fetch වෙනුවට api.post භාවිතා කිරීම
+      const res = await api.post('/api/contact', formData);
+      
+      if (res.status === 201 || res.status === 200) {
         toast({ title: "Message sent! ✅", description: "I'll get back to you soon." });
         setFormData({ name: '', email: '', message: '' });
-      } else { throw new Error(); }
-    } catch {
-      toast({ variant: "destructive", title: "Oops!", description: "Something went wrong." });
-    } finally { setIsSubmitting(false); }
+      }
+    } catch (error) {
+      console.error("Contact form error:", error);
+      toast({ variant: "destructive", title: "Oops!", description: "Something went wrong. Please try again." });
+    } finally { 
+      setIsSubmitting(false); 
+    }
   };
 
   return (
@@ -43,7 +46,7 @@ export const ContactForm = () => {
           <form onSubmit={handleSubmit} className="space-y-6 flex flex-col h-full justify-between">
             <div className="space-y-5">
               
-              {/* 🔴 Name Field with Subtle Label */}
+              {/* Name Field */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 ml-1">
                   Your Name
@@ -57,7 +60,7 @@ export const ContactForm = () => {
                 />
               </div>
 
-              {/* 🔴 Email Field with Subtle Label */}
+              {/* Email Field */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 ml-1">
                   Email Address
@@ -72,7 +75,7 @@ export const ContactForm = () => {
                 />
               </div>
 
-              {/* 🔴 Message Field with Subtle Label */}
+              {/* Message Field */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 ml-1">
                   Your Message
