@@ -7,9 +7,10 @@ import { ProjectData } from '@/types';
 
 interface TechProjectCardProps {
   project: ProjectData;
+  onClick?: () => void; // 🔴 Optional prop එකක් විදියට දැම්මා
 }
 
-export const TechProjectCard = ({ project }: TechProjectCardProps) => {
+export const TechProjectCard = ({ project, onClick }: TechProjectCardProps) => {
   const [count, setCount] = useState(project.stars || 0);
   const [hasReacted, setHasReacted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -41,7 +42,7 @@ export const TechProjectCard = ({ project }: TechProjectCardProps) => {
     setTimeout(() => setIsAnimating(false), 300); 
 
     try {
-      await fetch(`http://localhost:5000/api/projects/${project._id}/react`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/projects/${project._id}/react`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'star', action: isCurrentlyReacted ? 'remove' : 'add' })
@@ -50,8 +51,10 @@ export const TechProjectCard = ({ project }: TechProjectCardProps) => {
   };
 
   return (
-    // 🔴 Premium Tech Card: rounded-2xl, backdrop-blur සහ hover effects යොදා ඇත
-    <Card className="group overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-white/10 relative flex flex-col h-full rounded-2xl md:rounded-3xl">
+    <Card 
+      onClick={onClick}
+      className={`group overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200 dark:border-white/10 relative flex flex-col h-full rounded-2xl md:rounded-3xl ${onClick ? 'cursor-pointer' : ''}`}
+    >
       <CardHeader className="p-0">
         <div className="relative overflow-hidden aspect-video border-b border-slate-200 dark:border-white/5">
           <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
@@ -97,12 +100,12 @@ export const TechProjectCard = ({ project }: TechProjectCardProps) => {
       
       <CardFooter className="p-6 md:p-8 pt-0 flex gap-3 md:gap-4 mt-auto">
         {project.link && (
-          <Button asChild size="sm" className="flex-1 rounded-xl font-bold shadow-md hover:-translate-y-0.5 transition-all">
+          <Button asChild size="sm" className="flex-1 rounded-xl font-bold shadow-md hover:-translate-y-0.5 transition-all" onClick={(e) => e.stopPropagation()}>
             <a href={project.link} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-4 w-4 mr-2" /> Live Demo</a>
           </Button>
         )}
         {project.githubUrl && (
-          <Button asChild variant="outline" size="sm" className="flex-1 rounded-xl font-bold bg-transparent border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-0.5 transition-all">
+          <Button asChild variant="outline" size="sm" className="flex-1 rounded-xl font-bold bg-transparent border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-0.5 transition-all" onClick={(e) => e.stopPropagation()}>
             <a href={project.githubUrl} target="_blank" rel="noopener noreferrer"><Github className="h-4 w-4 mr-2" /> Code</a>
           </Button>
         )}

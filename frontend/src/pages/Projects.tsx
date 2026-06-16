@@ -6,6 +6,7 @@ import { ProjectsHero } from '@/components/projects/ProjectsHero';
 import { ProjectsFilter } from '@/components/projects/ProjectsFilter';
 import { ProjectsGrid } from '@/components/projects/ProjectsGrid';
 import { ProjectsTools } from '@/components/projects/ProjectsTools';
+import { ProjectModal } from '@/components/home/modals/ProjectModal'; 
 
 const Projects = () => {
   const [activeTab, setActiveTab] = useState<'creative' | 'tech'>('creative');
@@ -13,12 +14,12 @@ const Projects = () => {
   
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        // 🟢 localhost වෙනුවට අනිවාර්යයෙන්ම Env Variable එක යොදා ඇත. 
-        // මෙය Production වලදී Crash වීම වළක්වයි.
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects`);
         if (response.ok) {
           const data = await response.json();
@@ -38,8 +39,17 @@ const Projects = () => {
   }, []);
 
   const filteredProjects = projects.filter(project => {
-    const safeCategory = project.category || '';
-    const matchesCategory = safeCategory.toLowerCase().includes(activeTab);
+    const safeCategory = project.category?.toLowerCase() || '';
+    
+    // 🔴 අලුත් Category Matching Logic එක
+    // Creative ටැබ් එකට අදාළ Keywords
+    const creativeKeywords = ['creative', 'design', 'ui', 'ux', 'pattern', 'art', 'illustration', 'graphics'];
+    
+    // Category එකේ මේ keywords තියෙනවද කියලා බලනවා
+    const isCreative = creativeKeywords.some(keyword => safeCategory.includes(keyword));
+
+    // Active tab එක 'creative' නම් isCreative true වෙන ඒවා ගන්නවා, නැත්නම් ඉතුරු ඔක්කොම (Mobile App, Web etc.) 'tech' එකට ගන්නවා.
+    const matchesCategory = activeTab === 'creative' ? isCreative : !isCreative;
 
     const searchLower = searchTerm.toLowerCase();
     const safeTitle = project.title || '';
@@ -64,7 +74,6 @@ const Projects = () => {
   };
 
   return (
-    // 🔴 Premium Background: අනිත් පිටුවලට සමානව bg-slate-50 සහ dark:bg-[#0B0F19] යොදා ඇත
     <div className="min-h-screen pt-20 bg-slate-50 dark:bg-[#0B0F19] transition-colors duration-300">
       <ProjectsHero />
       
@@ -81,6 +90,7 @@ const Projects = () => {
         activeTab={activeTab} 
         searchTerm={searchTerm} 
         onClearSearch={() => setSearchTerm('')} 
+        onOpenProject={(project) => setSelectedProject(project)} 
       />
       
       <ProjectsTools 
@@ -88,6 +98,14 @@ const Projects = () => {
         activeTab={activeTab} 
         searchTerm={searchTerm} 
       />
+
+      {selectedProject && (
+        <ProjectModal 
+          project={selectedProject as any} 
+          isOpen={true} 
+          onClose={() => setSelectedProject(null)} 
+        />
+      )}
     </div>
   );
 };

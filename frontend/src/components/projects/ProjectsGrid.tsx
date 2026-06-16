@@ -12,9 +12,10 @@ interface ProjectsGridProps {
   activeTab: 'creative' | 'tech';
   searchTerm: string;
   onClearSearch: () => void;
+  onOpenProject: (project: ProjectData) => void; // 🔴 අලුතින් එකතු කළ prop එක
 }
 
-export const ProjectsGrid = ({ loading, projects, activeTab, searchTerm, onClearSearch }: ProjectsGridProps) => {
+export const ProjectsGrid = ({ loading, projects, activeTab, searchTerm, onClearSearch, onOpenProject }: ProjectsGridProps) => {
   
   // 🔴 Lightbox එක සඳහා State එක (දැනට තෝරාගෙන ඇති පින්තූරයේ අංකය)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -88,6 +89,7 @@ export const ProjectsGrid = ({ loading, projects, activeTab, searchTerm, onClear
                 ) : (
                   <TechProjectCard 
                     project={project} 
+                    onClick={() => onOpenProject(project)} // 🔴 මෙතනින් onClick එක පාස් කළා
                   />
                 )}
               </div>

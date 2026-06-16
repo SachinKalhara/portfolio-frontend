@@ -27,28 +27,28 @@ export const HeroSection: React.FC<Props> = ({ slides }) => {
 
   return (
     <section className="relative h-[calc(100vh-50px)] flex items-center overflow-hidden bg-black">
-      {/* Background Images & Animation (කිසිම වෙනසක් කර නැත) */}
+      
+      {/* 🔴 Background Images - opacity-100 යොදා ඇත */}
       {slides.length > 0 ? slides.map((slide, idx) => (
-        <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? 'opacity-60' : 'opacity-0'}`}>
+        <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
           <img src={slide.imageUrl} alt="" className="w-full h-full object-cover" />
         </div>
       )) : (
         <div className="absolute inset-0 bg-slate-900 animate-pulse" />
       )}
       
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent z-10" />
+      {/* 🔴 Gradient Overlay - වම් පැත්තට පමණක් සීමා කර ඇත (දකුණු පැත්ත 100% පැහැදිලියි) */}
+      <div className="absolute inset-y-0 left-0 w-full md:w-3/4 lg:w-5/7 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
       
       {/* Aligned Container */}
       <div className="relative z-20 w-full max-w-6xl mx-auto px-6 md:px-8">
         
         <div className={`max-w-4xl transition-all duration-700 transform ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           
-          {/* 🔴 Greeting: text-lg sm:text-xl (වඩාත් පිළිවෙල, Premium පෙනුමක්) */}
           <p className="text-lg sm:text-xl font-medium text-gray-400 mb-3 tracking-wide uppercase">
             {slides[currentSlide]?.greeting || "Welcome"}
           </p>
           
-          {/* 🔴 Main Title: text-4xl sm:text-6xl lg:text-7xl (අනවශ්‍ය විශාල බව ඉවත් කර ඇත) */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-hero font-bold mb-6 leading-tight">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-purple-600">
               {slides[currentSlide]?.title || "Sachin Kalhara"}
@@ -56,12 +56,11 @@ export const HeroSection: React.FC<Props> = ({ slides }) => {
             <span className="text-white">.</span>
           </h1>
           
-          {/* 🔴 Subtitle: text-base sm:text-lg (කියවීමට පහසු සුවදායක ප්‍රමාණය) */}
-          <div className="bg-white/5 backdrop-blur-md border border-white/10 border-l-4 border-l-primary p-5 md:p-6 rounded-2xl mb-10 max-w-2xl">
-            <p className="text-base sm:text-lg text-gray-300 leading-relaxed font-medium">
-              {slides[currentSlide]?.subtitle || "Crafting digital experiences."}
-            </p>
-          </div>
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 border-l-4 border-l-primary p-5 md:p-6 rounded-2xl mb-10 w-full max-w-xl">
+  <p className="text-base sm:text-lg text-gray-300 leading-relaxed font-medium">
+    {slides[currentSlide]?.subtitle || "Crafting digital experiences."}
+  </p>
+</div>
           
           <div className="flex flex-col sm:flex-row gap-4">
             <Button size="lg" className="rounded-full px-8 py-7 text-md font-bold shadow-xl" onClick={() => navigate('/projects')}>
