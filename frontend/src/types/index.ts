@@ -11,6 +11,7 @@ export interface Project {
   description: string;
   techStack: string[];
   link?: string;
+  githubLink?: string;
   imageUrl: string;
   category: string;
   stars?: number;
@@ -23,6 +24,7 @@ export interface ProjectData {
   description?: string;
   techStack?: string[];
   link?: string;
+  githubLink?: string;
   imageUrl: string;
   category: string;
   stars: number;

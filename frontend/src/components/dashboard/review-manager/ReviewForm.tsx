@@ -10,7 +10,7 @@ interface Props {
   formData: any;
   setFormData: (data: any) => void;
   isEditing: boolean;
-  isLoading: boolean; // 🟢 මෙයයි නිවැරදි variable නම
+  isLoading: boolean;
   onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
@@ -101,7 +101,6 @@ export const ReviewForm: React.FC<Props> = ({ formData, setFormData, isEditing, 
 
           <div className="flex gap-4 pt-4 border-t border-border/50">
             <Button type="button" variant="outline" onClick={onCancel} className="flex-1 h-12 text-md">Cancel</Button>
-            {/* 🟢 මෙහි loading වෙනුවට isLoading යෙදුවා */}
             <Button type="submit" disabled={isLoading} className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold text-md shadow-soft hover:-translate-y-0.5 transition-smooth">
               {isLoading ? <Loader2 className="animate-spin mr-2" /> : (isEditing ? <Edit className="mr-2 h-5 w-5"/> : <PlusCircle className="mr-2 h-5 w-5" />)}
               {isEditing ? 'Save Changes' : 'Publish Review'}

@@ -89,7 +89,7 @@ const ProjectManager: React.FC<Props> = ({ projects, refreshProjects }) => {
         techStack: formData.techStack.split(',').map(s => s.trim()).filter(s => s), 
         imageUrl: finalUrl 
       };
-
+console.log("Sending to Backend:", body);
       if (editingProjectId) {
         await api.put(`/api/projects/${editingProjectId}`, body);
         toast.success("Project updated successfully!");
