@@ -3,9 +3,9 @@ import axios from 'axios';
 
 // 1. අලුත් Axios instance එකක් සෑදීම
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'https://portfolio-backend-production-cca6.up.railway.app/projects',
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
 });
-//'http://localhost:5000'||
+
 // 2. Request Interceptor එක (යවන හැම request එකකටම Token එක ස්වයංක්‍රීයව දැමීම)
 api.interceptors.request.use(
     (config) => {
